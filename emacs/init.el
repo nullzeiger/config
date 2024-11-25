@@ -190,15 +190,6 @@
   (eshell-command
    (format "find %s -type f -name \"*.[ch]\" | etags -" dir-name)))
 
-;; Set calendar
-(require 'solar)
-(setq calendar-latitude 49.5137)
-(setq calendar-longitude 8.4176)
-(setq calendar-location-name "Ludwigshafen")
-
-;; Birthday
-(setq holiday-other-holidays '((holiday-fixed 5 22 "Compleanno")))
-
 ;; Time 24hr format
 (require 'time)
 ;;  Show current time in the modeline
