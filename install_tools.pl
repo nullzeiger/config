@@ -23,15 +23,15 @@ if ($os eq "fedora") {
 print "Installation complete.\n";
 
 print "Install Kitty terminal\n";
-system("bash", "install_kitty.sh");
+system("bash", "install_kitty.sh") == 0 or die "Error installing Kitty: $!";
 print "Installation Kitty complete\n";
 
 print "Install Nvim terminal\n";
-system("bash", "install_nvim.sh");
+system("bash", "install_nvim.sh") == 0 or die "Error installing Nvim: $!";
 print "Installation Nvim complete\n";
 
 print "Copy .vimrc in ~\n";
-copy(".vimrc", "~/.vimrc");
+copy(".vimrc", "~/.vimrc") or die "Copy failed: $!";
 print "File .vimrc copied\n";
 
 sub determine_os {
