@@ -10,6 +10,7 @@ tar -C ~/.local -xzf nvim-linux64.tar.gz
 mv ~/.local/nvim-linux64 ~/.local/nvim.app
 # Create symbolic links to add nvim to PATH (assuming ~/.local/bin is in
 # your system-wide PATH)
+mkdir -p ~/.local/bin
 ln -sf ~/.local/nvim.app/bin/nvim ~/.local/bin/
 # Delete archive
 rm -rf nvim-linux64.tar.gz

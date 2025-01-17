@@ -93,8 +93,6 @@ vim.g.maplocalleader = ' '
 -- Set to true if you have a Nerd Font installed and selected in the terminal
 vim.g.have_nerd_font = false
 
-vim.g.zig_fmt_autosave = false
-
 -- [[ Setting options ]]
 -- See `:help vim.opt`
 -- NOTE: You can change these options as you wish!
@@ -117,8 +115,8 @@ vim.opt.showmode = false
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
 -- vim.schedule(function()
-  -- vim.opt.clipboard = 'unnamedplus'
---end)
+--   vim.opt.clipboard = 'unnamedplus'
+-- end)
 
 -- Enable break indent
 vim.opt.breakindent = true
@@ -131,13 +129,12 @@ vim.opt.ignorecase = true
 vim.opt.smartcase = true
 
 -- Keep signcolumn on by default
-vim.opt.signcolumn = 'yes'
+-- vim.opt.signcolumn = 'yes'
 
 -- Decrease update time
 vim.opt.updatetime = 250
 
 -- Decrease mapped sequence wait time
--- Displays which-key popup sooner
 vim.opt.timeoutlen = 300
 
 -- Configure how new splits should be opened
@@ -150,17 +147,27 @@ vim.opt.splitbelow = true
 vim.opt.list = true
 vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 
+-- Set tabstop to 4 spaces
+vim.opt.tabstop = 4
+-- Set shiftwidth to 4 spaces for consistent indentation
+vim.opt.shiftwidth = 4
+-- Use spaces instead of tabs for indentation
+vim.opt.expandtab = true
+-- Softtabstop for consistent behavior with the Tab key
+vim.opt.softtabstop = 4
+
 -- Preview substitutions live, as you type!
 vim.opt.inccommand = 'split'
 
 -- Show which line your cursor is on
-vim.opt.cursorline = true
+-- vim.opt.cursorline = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
 
--- Use a popup menu to show the possible completions.
-vim.opt.completeopt = { 'menu', 'noselect', 'preview' }
+-- Set old vim colorscheme
+vim.cmd("colorscheme vim")
+vim.opt.termguicolors = false
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
@@ -195,8 +202,6 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
-vim.keymap.set('i', '<C-o>', '<C-x><C-o>', { desc = 'Omnifunc'})
-
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
@@ -211,5 +216,15 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
+-- Set .h file for using c not c++
+vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
+  desc = 'Set .h file for using c not c++',
+  pattern = "*.h",
+  callback = function()
+    vim.bo.filetype = "c"
+  end,
+})
+
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+

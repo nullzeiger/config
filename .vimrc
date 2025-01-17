@@ -46,23 +46,62 @@ let &t_RT = "\e[23;2t"
 " kitty that do not support background color erase.
 let &t_ut=''
 
-" incremental searching
+" Disable compatibility with vi which can cause unexpected issues.
+set nocompatible
+
+" Enable type file detection. Vim will be able to try to detect the type of file in use.
+filetype on
+
+" Enable plugins and load plugin for the detected file type.
+filetype plugin on
+
+" Load an indent file for the detected file type.
+filetype indent on
+
+" Incremental searching
 set incsearch
-" ignore case in search patterns
+
+" Turn syntax highlighting on.
+syntax on
+
+" Add numbers to each line on the left-hand side.
+set number
+
+" Set shift width to 4 spaces.
+set shiftwidth=4
+
+" Set tab width to 4 columns.
+set tabstop=4
+
+" Use space characters instead of tabs.
+set expandtab
+
+" Ignore case in search patterns
 set ignorecase
-"  automatic ignore case switch
+
+" Automatic ignore case switch
 set smartcase
-" show the status bar even with one buffer
+
+" Show the status bar even with one buffer
 set laststatus=2
-" show cursor position
+
+" Show cursor position
 set ruler
-" show current mode
+
+" Show current mode
 set showmode
-" copy indent from current line when starting a new line
+
+" Copy indent from current line when starting a new line
 set autoindent
 
-" add plugin for .editorconfig file
-packadd! editorconfig
-" add plugin for gdb
-packadd! termdebug
+" Enable auto completion menu after pressing TAB.
+set wildmenu
 
+" Make wildmenu behave like similar to Bash completion.
+set wildmode=list:longest
+
+" Add plugin for .editorconfig file
+packadd! editorconfig
+
+" Add plugin for gdb
+packadd! termdebug
