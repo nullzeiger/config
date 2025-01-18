@@ -21,6 +21,9 @@ if ($os eq "fedora") {
 
 print "Installation complete.\n";
 
+install_script()
+copy_vimrc_to_home()
+
 sub determine_os {
     if (-f "/etc/os-release") {
         my %os_info;
@@ -89,4 +92,12 @@ sub install_script {
         print "install_go.sh completed successfully.\n";
     }
 
+}
+
+sub copy_vimrc_to_home() {
+    if (copy(".vimrc", "~/.vimrc")) {
+        print "File '.vimrc' copied to '~/.vimrc' successfully.\n";
+    } else {
+        die "Error copying file: $!\n";
+    }
 }
