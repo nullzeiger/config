@@ -1,7 +1,6 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-use File::Copy;
 
 # Determine the operating system
 my $os = determine_os();
@@ -21,18 +20,6 @@ if ($os eq "fedora") {
 }
 
 print "Installation complete.\n";
-
-print "Install Kitty terminal\n";
-system("bash", "install_kitty.sh") == 0 or die "Error installing Kitty: $!";
-print "Installation Kitty complete\n";
-
-print "Install Nvim terminal\n";
-system("bash", "install_nvim.sh") == 0 or die "Error installing Nvim: $!";
-print "Installation Nvim complete\n";
-
-print "Copy .vimrc in ~\n";
-copy(".vimrc", "~/.vimrc") or die "Copy failed: $!";
-print "File .vimrc copied\n";
 
 sub determine_os {
     if (-f "/etc/os-release") {
@@ -66,7 +53,40 @@ sub install_packages_dnf {
 sub install_packages_apt {
     my @packages = @_;
     my $package_string = join " ", @packages;
-    my $command = "sudo apt update && sudo apt install -y $package_string"; # Update first
+    my $command = "sudo apt-get update && sudo apt-get install -y $package_string"; # Update first
     print "Executing: $command\n";
     system($command) == 0 or die "Error installing packages: $!";
+}
+
+sub install_script {
+    # Run the install_nvim.sh script
+    print "Running install_nvim.sh...\n";
+    my $result = system("bash ./install_nvim.sh");
+
+    if ($result != 0) {
+        die "Error running install_nvim.sh: Exit code $result\n";
+    } else {
+        print "install_nvim.sh completed successfully.\n";
+    }
+
+    # Run the install_kitty.sh script
+    print "Running install_kitty.sh...\n";
+    my $result = system("bash ./install_kitty.sh");
+
+    if ($result != 0) {
+        die "Error running install_kitty.sh: Exit code $result\n";
+    } else {
+        print "install_kitty.sh completed successfully.\n";
+    }
+
+    # Run the install_go.sh script
+    print "Running install_go.sh...\n";
+    my $result = system("bash ./install_go.sh");
+
+    if ($result != 0) {
+        die "Error running install_go.sh: Exit code $result\n";
+    } else {
+        print "install_go.sh completed successfully.\n";
+    }
+
 }
