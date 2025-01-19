@@ -1,4 +1,4 @@
 # config
 Config file
 
-For install all tools `./install_tools.pl`
+For install all tools `./install_tools.py`
