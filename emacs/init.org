@@ -1,0 +1,171 @@
+#+TITLE: Emacs Configuration
+#+AUTHOR: Ivan Guerreschi
+#+PROPERTY: header-args :tangle "init.el"
+
+* Performance optimization
+#+begin_src emacs-lisp
+;; The value of this variable is the number of bytes of storage that must be
+;; allocated for Lisp objects after one garbage collection in order to
+;; trigger another garbage collection.
+(setq gc-cons-threshold (* 800000 2))
+#+end_src
+
+* General
+#+begin_src emacs-lisp
+(setq history-length 25)                            ; Set the length of the command history.
+(savehist-mode t)                                   ; Save minibuffer history.
+(setq undo-no-redo t)                               ; Undo.
+(column-number-mode t)                              ; Display the column number in the mode line.
+(setq auto-save-default nil)                        ; Disable automatic saving of buffers.
+(setq create-lockfiles nil)                         ; Prevent the creation of lock files when editing.
+(setq inhibit-startup-message t)                    ; Disable the startup message when Emacs launches.
+(setq inhibit-startup-echo-area-message t)          ; Disable the startup message in echo area.
+(setq make-backup-files nil)                        ; Disable creation of backup files.
+(defvar pixel-scroll-precision-mode t)              ; Enable precise pixel scrolling.
+(defvar pixel-scroll-precision-use-momentum nil)    ; Disable momentum scrolling for pixel precision.
+(setq ring-bell-function 'ignore)                   ; Disable the audible bell.
+(defvar warning-minimum-level :emergency)           ; Set the minimum level of warnings to display.
+(setq use-short-answers t)                          ; Use short answers in prompts for quicker responses (y instead of yes).
+(defvar duplicate-line-final-position 1)            ; Specifies where to move point after duplicating the line.
+(defvar tags-revert-without-query t)                ; Don't prompt me to load tags.
+;; Replace the standard text representation of various identifiers/symbols.
+(global-prettify-symbols-mode t)
+(defvar gdb-many-windows 1)                         ; gdb many windows layout.
+(defvar gdb-show-main 1)                            ; Showing the source for the main function of the program you are debugging.
+;; ANSI Coloring in Compilation Mode.
+(add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
+(recentf-mode 1)                                    ; Enable tracking of recently opened files.
+(savehist-mode 1)                                   ; Enable saving of command history.
+(save-place-mode 1)                                 ; Enable saving the place in files for easier return.
+(winner-mode 1)                                     ; Enable winner mode to easily undo window configuration changes.
+(epa-file-enable)                                   ; Encrypting and Decrypting gpg Files
+(xterm-mouse-mode 1)                                ; Enable mouse support in terminal mode.
+(setq isearch-lazy-count t)                         ; Enable lazy counting to show current match information.
+(setq lazy-count-prefix-format "(%s/%s) ")          ; Format for displaying current match count.
+(setq lazy-count-suffix-format nil)                 ; Disable suffix formatting for match count.
+(setq search-whitespace-regexp ".*?")               ; Allow searching across whitespace.
+(setq help-at-pt-display-when-idle t)               ; Display messages when idle, without prompting
+(setq tags-revert-without-query 1)                  ; Auto reload TAGS
+#+end_src
+
+* Font
+#+begin_src emacs-lisp
+(add-to-list 'default-frame-alist '(font . "Iosevka Extended 14"))
+#+end_src
+
+* Time and calendar
+#+begin_src emacs-lisp
+;; Set calendar
+(defvar calendar-latitude 49.5137)
+(defvar calendar-longitude 8.4176)
+(defvar calendar-location-name "Ludwigshafen")
+;; My birthday
+(setq holiday-other-holidays '((holiday-fixed 5 22 "Compleanno")))
+;; Time 24hr format
+(require 'time)
+;;  Show current time in the modeline
+(display-time-mode 1)
+(setq display-time-format nil
+      display-time-24hr-format 1)
+#+end_src
+
+* Gui
+#+begin_src emacs-lisp
+;; Maximize the frame
+;; A “fullboth” frame, on the other hand, usually omits the title bar and occupies the entire available screen space.
+(add-to-list 'default-frame-alist '(fullscreen . fullboth))
+(tool-bar-mode -1)                                  ; Disable the tool bar for a cleaner interface.
+(menu-bar-mode -1)                                  ; Disable the menu bar for a more streamlined look.
+(scroll-bar-mode -1)                                ; Disable the scroll bar.
+(show-paren-mode 1)                                 ; Matching pairs of parentheses.
+;;(load-theme 'tango-dark t)                        ; Load tango-dark theme.
+(when (eq custom-enabled-themes nil)
+  (global-hl-line-mode 1))                          ; Enable highlight of the current line if theme is nil.
+(global-auto-revert-mode 1)                         ; Enable global auto-revert mode to keep buffers up to date with their corresponding files.
+#+end_src
+
+* Personal function
+#+begin_src emacs-lisp
+;; Kill all buffers
+(defun nullzeiger/kill-other-buffers ()
+  "Kill all other buffers."
+  (interactive)
+  (mapc 'kill-buffer (delq (current-buffer) (buffer-list))))
+
+;; Formatting C style using indent
+(defun nullzeiger/indent-format ()
+  "Formatting c file using indent."
+  (interactive)
+  (shell-command-to-string
+   (concat
+    "indent --no-tabs " (buffer-file-name)))
+  (revert-buffer :ignore-auto :noconfirm))
+
+;; Create TAGS file for c
+(defun nullzeiger/create-tags (dir-name)
+  "Create tags file in DIR-NAME."
+  (interactive "DDirectory: ")
+  (eshell-command
+   (format "find %s -type f -name \"*.[ch]\" | etags -" dir-name)))
+#+end_src
+
+* Global key bindings
+#+begin_src emacs-lisp
+(global-set-key (kbd "C-c n") 'flymake-goto-next-error)
+(global-set-key (kbd "C-c p") 'flymake-goto-prev-error)
+(global-set-key (kbd "C-.") 'duplicate-line)
+#+end_src
+
+* Hook
+#+begin_src emacs-lisp
+(add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
+(add-hook 'prog-mode-hook 'display-line-numbers-mode)
+(add-hook 'emacs-lisp-mode-hook 'electric-pair-mode)
+(add-hook 'c-mode-hook 'electric-pair-mode)
+(remove-hook 'flymake-diagnostic-functions 'flymake-proc-legacy-flymake)
+#+end_src
+
+* Scheme
+#+begin_src emacs-lisp
+;; Set guile default scheme.
+(defvar scheme-program-name "guile3.0")
+#+end_src
+
+* Gnus
+#+begin_src emacs-lisp
+
+;; Personal Information.
+(setq user-mail-address "ivan.guerreschi.dev@gmail.com"
+      user-full-name "Ivan Guerreschi"
+      user-login-name "ivan.guerreschi.dev")
+
+;; Set directory.
+(defvar message-directory "~/.emacs.d/mail/")       ; Directory used by many mailish things.
+(defvar gnus-directory "~/.emacs.d/news/")          ; Gnus storage file and directory.
+(defvar gnus-use-dribble-file nil)                  ; Gnus won’t create and maintain a dribble buffer.
+
+;; Sort thread.
+(defvar gnus-thread-sort-functions
+  '(gnus-thread-sort-by-most-recent-date
+    (not gnus-thread-sort-by-number)))
+
+;; Send email through SMTP.
+(defvar message-send-mail-function 'smtpmail-send-it)
+(defvar smtpmail-smtp-server "smtp.gmail.com")
+(defvar smtpmail-smtp-service 465)
+(defvar smtpmail-stream-type 'tls)
+(defvar gnus-ignored-newsgroups "^to\\.\\|^[0-9. ]+\\( \\|$\\)\\|^[\"]\"[#'()]")
+
+;; read news from Gwene with Gnus.
+(defvar gnus-select-method '(nntp "news.gwene.org"))
+
+;; GMAIL.
+(defvar gnus-secondary-select-methods
+	     '((nnimap "gmail"
+		      (nnimap-address "imap.gmail.com")
+		      (nnimap-server-port "imaps")
+		      (nnimap-stream ssl)
+		      (nnir-search-engine imap)
+		      (nnmail-expiry-target "nnimap+home:[Gmail]/Trash")
+                      (nnmail-expiry-wait 'immediate))))
+#+end_src

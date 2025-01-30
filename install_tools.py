@@ -1,16 +1,17 @@
 #!/bin/env python3
 
 import os
-import subprocess
 import shutil
+import subprocess
 import sys
+
 
 def main():
     # Determine the operating system
     os_name = determine_os()
 
     # Packages to install
-    packages = ["gcc", "gdb", "make", "valgrind", "curl", "git", "vim"]
+    packages = ["gcc", "gdb", "make", "valgrind", "curl", "git", "vim", "autoconf", "automake"]
 
     # Install packages based on OS
     if os_name == "fedora":
